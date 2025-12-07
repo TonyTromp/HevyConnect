@@ -24,26 +24,16 @@ By default all exercises are mapped between Hevy and Garmin FIT file format. Che
 
 ### Step 1: Export Your Workout from Hevy
 
-1. **Open the Hevy App** on your mobile device (iOS or Android)
+1. **Open the Hevy web and login ** https://hevy.com/
 
-2. **Navigate to Your Workout**
-   - Open the workout you want to export
-   - Make sure the workout is completed and saved
-
-3. **Export to CSV**
-   - Tap the **three dots menu** (⋮) or **share icon** in the top right corner
-   - Select **"Export"** or **"Share"**
-   - Choose **"CSV"** format
-   - The CSV file will be saved to your device or shared via email/cloud storage
-
-4. **Transfer to Your Computer**
-   - If exported to device storage, transfer the CSV file to your computer
-   - If shared via email, download the attachment
-   - If shared via cloud storage (iCloud, Google Drive, etc.), download the file
+2. **Navigate to Your Exports**
+   - https://hevy.com/settings?export
 
 ### Step 2: Convert CSV to FIT Format
 
 1. **Open HevyConnect**
+   - Build: docker compose build
+   - Run: docker compose up
    - Navigate to `http://localhost:3000` (if running locally)
    - Or use the deployed version of HevyConnect
 
