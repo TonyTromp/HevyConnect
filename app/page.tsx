@@ -61,10 +61,10 @@ export default function Home() {
               <div className="d-flex justify-content-between align-items-center mb-4">
                 <div className="text-center flex-grow-1">
                   <h1 className="card-title h3 mb-2">
-                    Hevy to Garmin FIT Converter
+                    HevyConnect
                   </h1>
                   <p className="text-muted small mb-0">
-                    Upload your Hevy CSV workout file to convert it to Garmin FIT format
+                    Convert your Hevy workouts to Garmin FIT format
                   </p>
                 </div>
                 <Link href="/load_fit" className="btn btn-outline-primary btn-sm ms-3">

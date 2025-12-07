@@ -1,0 +1,83 @@
+--progress is a global compose flag, better use `docker compose --progress xx build ...
+time="2025-12-07T21:59:52+01:00" level=warning msg="/Users/ttromp/Projects/HevyGarminConnect/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+#1 [internal] load local bake definitions
+#1 reading from stdin 570B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.fast
+#2 transferring dockerfile: 1.77kB done
+#2 DONE 0.0s
+
+#3 [auth] library/node:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#4 [internal] load metadata for docker.io/library/node:20-alpine
+#4 DONE 1.1s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 508B done
+#5 DONE 0.0s
+
+#6 [base 1/1] FROM docker.io/library/node:20-alpine@sha256:643e7036aa985317ebfee460005e322aa550c6b6883000d01daefb58689a58e2
+#6 resolve docker.io/library/node:20-alpine@sha256:643e7036aa985317ebfee460005e322aa550c6b6883000d01daefb58689a58e2 done
+#6 CACHED
+
+#7 [builder 1/5] WORKDIR /app
+#7 CACHED
+
+#8 [internal] load build context
+#8 transferring context: 3.76kB done
+#8 DONE 0.0s
+
+#9 [runner 2/5] RUN addgroup --system --gid 1001 nodejs &&     adduser --system --uid 1001 nextjs
+#9 DONE 0.1s
+
+#10 [deps 1/4] RUN apk add --no-cache libc6-compat
+#10 0.609 (1/3) Installing musl-obstack (1.2.3-r2)
+#10 0.630 (2/3) Installing libucontext (1.3.3-r0)
+#10 0.648 (3/3) Installing gcompat (1.1.0-r4)
+#10 0.667 OK: 11 MiB in 21 packages
+#10 DONE 0.7s
+
+#11 [deps 2/4] WORKDIR /app
+#11 DONE 0.0s
+
+#12 [deps 3/4] COPY package.json package-lock.json* ./
+#12 DONE 0.0s
+
+#13 [deps 4/4] RUN rm -rf node_modules package-lock.json.lock 2>/dev/null || true &&     npm cache clean --force &&     npm ci --no-audit --prefer-online
+#13 0.079 npm warn using --force Recommended protections disabled.
+#13 3.766 
+#13 3.766 added 58 packages in 4s
+#13 3.766 
+#13 3.766 14 packages are looking for funding
+#13 3.766   run `npm fund` for details
+#13 DONE 4.1s
+
+#14 [builder 2/5] COPY --from=deps /app/node_modules ./node_modules
+#14 DONE 0.6s
+
+#15 [builder 3/5] COPY . .
+#15 DONE 0.0s
+
+#16 [builder 4/5] RUN ls -la node_modules | head -5 &&     echo "Node modules installed at: $(date)" &&     echo "Total packages: $(find node_modules -type d -maxdepth 1 | wc -l)"
+#16 0.032 total 228
+#16 0.032 drwxr-xr-x   49 root     root          4096 Dec  7 20:59 .
+#16 0.032 drwxr-xr-x    1 root     root          4096 Dec  7 20:59 ..
+#16 0.032 drwxr-xr-x    2 root     root          4096 Dec  7 20:59 .bin
+#16 0.032 -rw-r--r--    1 root     root         29699 Dec  7 20:59 .package-lock.json
+#16 0.032 Node modules installed at: Sun Dec  7 20:59:59 UTC 2025
+#16 0.033 Total packages: 48
+#16 DONE 0.0s
+
+#17 [builder 5/5] RUN echo "Starting Next.js build at $(date)" &&     npm run build &&     echo "Build completed at $(date)"
+#17 0.053 Starting Next.js build at Sun Dec  7 20:59:59 UTC 2025
+#17 0.188 
+#17 0.188 > hevyconnect@1.0.0 build
+#17 0.188 > next build
+#17 0.188 
+#17 0.467    ▲ Next.js 16.0.7 (Turbopack)
+#17 0.467    - Experiments (use with caution):
+#17 0.467      · serverActions
+#17 0.467 
+#17 0.479    Creating an optimized production build ...

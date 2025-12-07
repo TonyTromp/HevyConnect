@@ -1,0 +1,40 @@
+# Development Dockerfile - No production build
+# syntax=docker/dockerfile:1
+FROM node:20-alpine AS base
+
+# Install dependencies - ALWAYS FRESH INSTALL
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+# Copy package files
+COPY package.json package-lock.json* ./
+
+# Remove any existing node_modules and npm cache, then install fresh
+RUN rm -rf node_modules package-lock.json.lock 2>/dev/null || true && \
+    npm cache clean --force && \
+    npm ci --no-audit --prefer-online
+
+# Development runner - no build step
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
+# Copy node_modules and source code
+COPY --from=deps /app/node_modules ./node_modules
+COPY --chown=nextjs:nodejs . .
+
+USER nextjs
+
+EXPOSE 3000
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# Run in development mode (no build needed)
+CMD ["npm", "run", "dev"]
+

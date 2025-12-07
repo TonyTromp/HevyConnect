@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
+  // Remove 'standalone' output for dev mode - it's only needed for production
+  // output: 'standalone',
   experimental: {
     serverActions: {
       bodySizeLimit: '10mb',

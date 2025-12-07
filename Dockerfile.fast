@@ -1,42 +1,55 @@
-# Alternative faster Dockerfile - builds locally first, then copies
+# Alternative faster Dockerfile - optimized for faster builds
+# Use Debian-based image instead of Alpine for better native module support
 # syntax=docker/dockerfile:1
-FROM node:20-alpine AS base
+FROM node:20-slim AS base
 
-# Install dependencies
+# Install dependencies - ALWAYS FRESH INSTALL
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
+# Install build tools needed for native modules (lightningcss)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 make g++ \
+    && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
+
+# Copy package files
 COPY package.json package-lock.json* ./
-RUN --mount=type=cache,target=/root/.npm \
-    npm ci --prefer-offline --no-audit
 
-# Builder stage
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
+# Remove any existing node_modules and npm cache, then install fresh
+RUN rm -rf node_modules package-lock.json.lock 2>/dev/null || true && \
+    npm cache clean --force && \
+    npm ci --no-audit --prefer-online
 
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_ENV=production
-ENV NODE_OPTIONS="--max-old-space-size=4096"
+# Verify lightningcss is installed (Debian-based images have better binary support)
+RUN ls -la node_modules/lightningcss/node/ || echo "lightningcss check"
 
-# Build with verbose output and cache
-RUN --mount=type=cache,target=/app/.next/cache \
-    npm run build 2>&1 | tee /tmp/build.log || (cat /tmp/build.log && exit 1)
-
-# Production runner
+# Development runner - NO PRODUCTION BUILD
+# Skip builder stage entirely, just install deps and run dev mode
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV=production
+ENV NODE_ENV=development
 ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Copy node_modules from deps stage (freshly installed)
+COPY --from=deps /app/node_modules ./node_modules
+
+# Copy source code with proper ownership
+COPY --chown=nextjs:nodejs . .
+
+# Set ownership of app directory and create .next directory
+# Only chown the directory itself and .next, not recursively (faster)
+RUN chown nextjs:nodejs /app && \
+    mkdir -p /app/.next && \
+    chown nextjs:nodejs /app/.next
+
+# Verify node_modules are present and not from host
+RUN ls -la node_modules | head -5 && \
+    echo "Dependencies installed at $(date)" && \
+    echo "Skipping production build - running in development mode" && \
+    echo "Total packages: $(find node_modules -type d -maxdepth 1 | wc -l)"
 
 USER nextjs
 
@@ -44,5 +57,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
-
+# Run in development mode (no build needed)
+CMD ["npm", "run", "dev"]

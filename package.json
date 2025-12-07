@@ -1,5 +1,5 @@
 {
-  "name": "hevygarminconnect",
+  "name": "hevyconnect",
   "version": "1.0.0",
   "description": "Convert Hevy CSV workout files to Garmin FIT format",
   "private": true,

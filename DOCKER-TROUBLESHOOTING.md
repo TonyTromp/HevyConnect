@@ -39,7 +39,7 @@ Use the provided build script which enables BuildKit automatically:
 To see what's happening during the build:
 
 ```bash
-DOCKER_BUILDKIT=1 docker build --progress=plain -t hevy-garmin-converter .
+DOCKER_BUILDKIT=1 docker build --progress=plain -t hevyconnect .
 ```
 
 Or with docker-compose:

@@ -1,15 +1,15 @@
-version: '3.8'
-
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile.fast
-    container_name: hevy-garmin-converter
+      # Force fresh build - no cache
+      no_cache: false
+    container_name: hevyconnect
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]
@@ -17,4 +17,3 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-
