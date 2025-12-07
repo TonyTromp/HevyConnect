@@ -6,9 +6,7 @@ By default all exercises are mapped between Hevy and Garmin FIT file format. Che
 
 ## Features
 
-- Drag & drop CSV file upload
-- Click-to-upload fallback
-- Automatic download of converted FIT files
+- Drag & drop CSV file upload / download converted FIT file
 - Processes the last activity from the CSV file
 - Option to include or exclude detailed sets in the FIT file
 - View and inspect FIT file contents
